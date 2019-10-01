@@ -1,9 +1,13 @@
 import express from 'express';
 const router = express.Router();
+import controller from '../controllers/users';
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
-  res.send('respond with a resource change');
+  controller.getAll(req, res, next);
+});
+router.post('/login', (req, res, next) => {
+  controller.login(req, res, next);
 });
 
 
