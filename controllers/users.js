@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import config from '../config';
 
 const getAll = (req, res, next) => {
+  console.log(req.decoded)
   User.getAll((err, user) => {
     console.log('controller');
     if (err) {
@@ -25,11 +26,11 @@ const login = (req, res, next) => {
       res.status(400).send('Invalid username/password');
     }
     // Create a token
-    const payload = { user: user.name };
+    let result = user[0];
+    const payload = { user: result.id };
     const options = { expiresIn: '2d', issuer: 'http://claimfiler.com' };
     const secret = config.JWT_TOKEN_SECRET;
     const token = jwt.sign(payload, secret, options);
-    let result = user[0];
     result.token = token;
     res.send(result);
   });

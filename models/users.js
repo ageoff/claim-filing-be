@@ -21,6 +21,26 @@ User.create = (newUser, result) => {
   });
 };
 
+User.getById = (id, result) => {
+  sql.query(`
+    SELECT
+      id, email, name, created_on, updated_on
+    FROM users WHERE id = ?
+  `,
+  id,
+  (err, res) => {
+    console.log(err)
+    if (err) {
+      result(err, null);
+    } else {
+      console.log('WE GOT THIS')
+      console.log(res)
+      result(null, res);
+    }
+  }
+  );
+};
+
 User.get = (email, password, result) => {
   sql.query(`
     SELECT
