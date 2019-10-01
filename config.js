@@ -1,3 +1,3 @@
 module.exports = {
-	JWS_SECRET_TOKE: 'thisIsMySecret',
+	JWT_TOKEN_SECRET: 'thisIsMySecret',
 };

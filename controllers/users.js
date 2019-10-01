@@ -1,4 +1,7 @@
 import User from '../models/users';
+import jwt from 'jsonwebtoken';
+import config from '../config';
+
 const getAll = (req, res, next) => {
   User.getAll((err, user) => {
     console.log('controller');
@@ -21,7 +24,14 @@ const login = (req, res, next) => {
     } else if (user.length !== 1) {
       res.status(400).send('Invalid username/password');
     }
-    res.send(user[0]);
+    // Create a token
+    const payload = { user: user.name };
+    const options = { expiresIn: '2d', issuer: 'http://claimfiler.com' };
+    const secret = config.JWT_TOKEN_SECRET;
+    const token = jwt.sign(payload, secret, options);
+    let result = user[0];
+    result.token = token;
+    res.send(result);
   });
 };
 

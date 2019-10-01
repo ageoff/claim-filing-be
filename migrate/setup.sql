@@ -60,7 +60,7 @@ INSERT INTO `claim_type_questions` (claim_type_id, question_id) VALUES (1, 4);
 CREATE TABLE IF NOT EXISTS `user_claims` (
   `id` int(11) NOT NULL PRIMARY KEY PRIMARY KEY AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `status` VARCHAR(200) ENUM('incomplete', 'submitted', 'under review', 'approved', 'completed'),
+  `status` ENUM('incomplete', 'submitted', 'under review', 'approved', 'completed'),
   `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_on` TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
   CONSTRAINT fk_user_claims1 FOREIGN KEY (user_id) REFERENCES users(id)
