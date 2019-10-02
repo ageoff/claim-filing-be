@@ -12,10 +12,8 @@ var User = (user) => {
 User.create = (newUser, result) => {
   sql.query('INSERT INTO users SET ?', newUser, (err, res) => {
     if (err) {
-      console.log('error: ', err);
       result(err, null);
     } else {
-      console.log(res.insertId);
       result(null, res.insertId);
     }
   });
@@ -29,12 +27,9 @@ User.getById = (id, result) => {
   `,
   id,
   (err, res) => {
-    console.log(err)
     if (err) {
       result(err, null);
     } else {
-      console.log('WE GOT THIS')
-      console.log(res)
       result(null, res);
     }
   }
@@ -60,13 +55,9 @@ User.get = (email, password, result) => {
 
 User.getAll = (result) => {
   sql.query('Select * FROM users', (err, res) => {
-
     if (err) {
-      console.log('error: ', err);
       result(null, err);
     } else {
-      console.log('tasks : ', res);
-
       result(null, res);
     }
   });
