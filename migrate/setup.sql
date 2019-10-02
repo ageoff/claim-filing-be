@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS `user_claim_types` (
   `claim_type_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `created_on` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_on` TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(), CONSTRAINT fk_user_claim_types1 FOREIGN KEY (claim_type_id) REFERENCES claim_types(id),
+  `updated_on` TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+  CONSTRAINT fk_user_claim_types1 FOREIGN KEY (claim_type_id) REFERENCES claim_types(id),
   CONSTRAINT fk_user_claim_types2 FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
