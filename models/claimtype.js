@@ -1,4 +1,5 @@
 import sql from './db.js';
+import async from 'async';
 
 var ClaimType = (claimtype) => {
   this.id = claimtype.id;
@@ -19,24 +20,33 @@ ClaimType.getClaimMetaByUserId = (userid, result) => {
     } else {
       let callback = (err, final) => result(err, final);
       let fin = [];
-      for (let i = 0; i < res.length; i++) {
-        let claim = res[i];
-        ClaimType.getQuestions(userid, (err, questions) => {
-          if (err) {
-            callback(err, null);
-          } else {
-            ClaimType.getWeeks(userid, (err, weeks) => {
-              if (err) {
-                callback(err, null);
-              } else {
-                fin.push({...claim, questions, weeks});
-                // Callback when done only
-                if (i === (res.length - 1)) callback(null, fin);
-              }
-            });
+      // For each result go get questions and the weeks
+      async.eachOf(res, (claim, key, innerBack) => {
+        console.log(claim);
+        // Call async for questions and weeks
+        async.parallel(
+          [
+            (call) => ClaimType.getQuestions(userid, (err, qs) => {
+              if (err) call(err);
+              else call(null, qs);
+            }),
+            (call) => ClaimType.getWeeks(userid, (err, ws) => {
+              if (err) call(err);
+              else call(null, ws);
+            }),
+          ],
+          (err, here) => {
+            if (err) innerBack(err, null);
+            else fin.push({...claim, questions: here[0], weeks: here[1]});
+            // Call we are done getting weeks and questions
+            innerBack();
           }
-        });
-      }
+        );
+      }, err => {
+        // Done with everything. Send back result or error.
+        if (err) callback(err, null);
+        else callback(null, fin);
+      });
     }
   });
 };
