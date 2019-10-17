@@ -18,34 +18,26 @@ ClaimType.getClaimMetaByUserId = (userid, result) => {
     if (err) {
       result(err, null);
     } else {
-      let callback = (err, final) => result(err, final);
       let fin = [];
       // For each result go get questions and the weeks
-      async.eachOf(res, (claim, key, innerBack) => {
-        console.log(claim);
+      async.eachOf(res, (claim, key, callback) => {
         // Call async for questions and weeks
         async.parallel(
           [
-            (call) => ClaimType.getQuestions(userid, (err, qs) => {
-              if (err) call(err);
-              else call(null, qs);
-            }),
-            (call) => ClaimType.getWeeks(userid, (err, ws) => {
-              if (err) call(err);
-              else call(null, ws);
-            }),
+            (handler) => ClaimType.getQuestions(userid, handler),
+            (handler) => ClaimType.getWeeks(userid, handler),
           ],
-          (err, here) => {
-            if (err) innerBack(err, null);
-            else fin.push({...claim, questions: here[0], weeks: here[1]});
+          (err, result) => {
+            if (err) callback(err, null);
+            else fin.push({...claim, questions: result[0], weeks: result[1]});
             // Call we are done getting weeks and questions
-            innerBack();
+            callback();
           }
         );
       }, err => {
         // Done with everything. Send back result or error.
-        if (err) callback(err, null);
-        else callback(null, fin);
+        if (err) result(err, null);
+        else result(null, fin);
       });
     }
   });
