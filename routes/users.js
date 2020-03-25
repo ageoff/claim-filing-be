@@ -1,9 +1,14 @@
 import express from 'express';
 const router = express.Router();
+import controller from '../controllers/users';
+import checkToken from '../utils/tokenMiddleware';
 
 /* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.send('respond with a resource change');
+router.get('/', checkToken, (req, res, next) => {
+  controller.getAll(req, res, next);
+});
+router.post('/login', (req, res, next) => {
+  controller.login(req, res, next);
 });
 
 

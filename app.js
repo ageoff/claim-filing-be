@@ -2,9 +2,11 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import checkToken from './utils/tokenMiddleware';
 
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
+import claimsRouter from './routes/claims';
 
 var app = express();
 
@@ -16,5 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/claims', checkToken, claimsRouter);
 
 module.exports = app;
